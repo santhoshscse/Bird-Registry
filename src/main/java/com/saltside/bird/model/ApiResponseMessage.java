@@ -23,7 +23,7 @@ public class ApiResponseMessage {
 		this.links = links;
 	}
 
-	public Object getError() {
+	public ErrorResponse getError() {
 		return error;
 	}
 
@@ -42,7 +42,7 @@ public class ApiResponseMessage {
 
 	}
 
-	public Object getLinks() {
+	public ResponseLink getLinks() {
 		return links;
 	}
 

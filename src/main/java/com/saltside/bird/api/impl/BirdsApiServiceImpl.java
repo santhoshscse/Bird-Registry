@@ -1,6 +1,7 @@
 package com.saltside.bird.api.impl;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -69,6 +70,7 @@ public class BirdsApiServiceImpl extends BirdsApiService {
 			if (!body.isValid()) {
 				throw new BirdException(Status.BAD_REQUEST, ErrorCode.FIELD_NOT_FOUND, ErrorMessage.FieldNotFound);
 			}
+			body.setAdded((new Date()).toString());
 			Bird res = DBStore.getInstance().add(body);
 			return ResponseUtil.getSuccessResponse(res);
 		} catch (BirdException e) {
