@@ -42,7 +42,7 @@ public class BirdsApiServiceImpl extends BirdsApiService {
 			if (limitVal > 20) {
 				limitVal = 20;
 			}
-			return ResponseUtil.getSuccessResponse(DBStore.getInstance().get(offset, limitVal));
+			return ResponseUtil.getSuccessResponse(DBStore.getInstance().get(offset, limitVal, true));
 		} catch (Exception e) {
 			return ResponseUtil.getUnknownExceptionResponse(e);
 		}

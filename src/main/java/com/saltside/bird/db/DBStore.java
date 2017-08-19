@@ -39,20 +39,26 @@ public class DBStore {
 		return bird.id(doc.getObjectId("_id").toHexString());
 	}
 
-	public List<Bird> get(String offset, int limit) throws BirdException {
+	public Object[] get(String offset, int limit, boolean visible) throws BirdException {
 		MongoCursor<Document> itr = null;
+		Bson filter = Filters.eq("visible", visible);
 		if (offset != null) {
-			Bson filter = Filters.lte("_id", getAsObjectId(offset));
-			itr = col.find(filter).limit(limit).iterator();
+			Bson idFilter = Filters.lte("_id", getAsObjectId(offset));
+			itr = col.find(Filters.and(filter, idFilter)).limit(limit + 1).iterator();
 		} else {
-			itr = col.find().limit(limit).iterator();
+			itr = col.find(filter).limit(limit).iterator();
 		}
 		List<Bird> retList = new ArrayList<Bird>();
+		int count = 0;
+		String nextOffset = "END";
 		while (itr.hasNext()) {
 			Document doc = itr.next();
+			if (count >= limit) {
+				nextOffset = doc.getObjectId("_id").toHexString();
+			}
 			retList.add(getAsBird(doc));
 		}
-		return retList;
+		return new Object[] { retList, nextOffset };
 	}
 
 	/**
@@ -67,10 +73,10 @@ public class DBStore {
 	}
 
 	public static void main(String[] args) throws BirdException {
-		System.out.println(getInstance().get(null, 10));
+		System.out.println(getInstance().get("599826f94befdf0a6666d657", 10, false));
 		System.out.println(getInstance().get("59980f674befdf0a6666d655"));
 		System.out.println(getInstance().delete("59980f674befdf0a6666d655"));
-		System.out.println(getInstance().get(null, 10));
+		System.out.println(getInstance().get(null, 10, true));
 		System.out.println(getInstance().get("59980f674befdf0a6666d655"));
 	}
 

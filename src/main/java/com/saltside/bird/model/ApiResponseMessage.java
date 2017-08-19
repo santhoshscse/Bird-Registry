@@ -2,9 +2,9 @@ package com.saltside.bird.model;
 
 public class ApiResponseMessage {
 
-	Object error;
+	ErrorResponse error;
 	Object data;
-	Object links;
+	ResponseLink links;
 
 	public ApiResponseMessage() {
 	}
@@ -13,11 +13,11 @@ public class ApiResponseMessage {
 		this(data, null);
 	}
 
-	public ApiResponseMessage(Object data, Object error) {
+	public ApiResponseMessage(Object data, ErrorResponse error) {
 		this(data, error, null);
 	}
 
-	public ApiResponseMessage(Object data, Object error, Object links) {
+	public ApiResponseMessage(Object data, ErrorResponse error, ResponseLink links) {
 		this.data = data;
 		this.error = error;
 		this.links = links;
@@ -27,7 +27,7 @@ public class ApiResponseMessage {
 		return error;
 	}
 
-	public ApiResponseMessage error(Object error) {
+	public ApiResponseMessage error(ErrorResponse error) {
 		this.error = error;
 		return this;
 	}
@@ -46,7 +46,7 @@ public class ApiResponseMessage {
 		return links;
 	}
 
-	public ApiResponseMessage links(Object links) {
+	public ApiResponseMessage links(ResponseLink links) {
 		this.links = links;
 		return this;
 
