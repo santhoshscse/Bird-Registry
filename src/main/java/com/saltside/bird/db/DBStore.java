@@ -55,16 +55,6 @@ public class DBStore {
 		return retList;
 	}
 
-	public List<Bird> get() {
-		MongoCursor<Bird> itr = col.find(Bird.class).iterator();
-		List<Bird> retList = new ArrayList<Bird>();
-		while (itr.hasNext()) {
-			Bird bird = itr.next();
-			retList.add(bird);
-		}
-		return retList;
-	}
-
 	/**
 	 * @param bird
 	 * @return
@@ -77,12 +67,11 @@ public class DBStore {
 	}
 
 	public static void main(String[] args) throws BirdException {
-		System.out.println(getInstance().get());
-//		System.out.println(getInstance().get(null, 10));
-//		System.out.println(getInstance().get("59980f674befdf0a6666d655"));
-//		System.out.println(getInstance().delete("59980f674befdf0a6666d655"));
-//		System.out.println(getInstance().get(null, 10));
-//		System.out.println(getInstance().get("59980f674befdf0a6666d655"));
+		System.out.println(getInstance().get(null, 10));
+		System.out.println(getInstance().get("59980f674befdf0a6666d655"));
+		System.out.println(getInstance().delete("59980f674befdf0a6666d655"));
+		System.out.println(getInstance().get(null, 10));
+		System.out.println(getInstance().get("59980f674befdf0a6666d655"));
 	}
 
 	/**
@@ -98,9 +87,6 @@ public class DBStore {
 			return getAsBird(doc.next());
 		}
 		return null;
-
-		// MongoCursor<Bird> res = col.find(filter, Bird.class).iterator();
-		// return res.hasNext() ? res.next() : null;
 	}
 
 	private ObjectId getAsObjectId(String id) throws BirdException {
