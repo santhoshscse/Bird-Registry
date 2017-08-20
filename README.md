@@ -1,5 +1,10 @@
 # Bird-Registry
 
+Prerequisites
+=============
+1. Install and run mongo server in default port
+2. Install maven build tool
+
 Running testcases
 =================
 1. Open terminal
