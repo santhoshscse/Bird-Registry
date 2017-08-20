@@ -1,6 +1,7 @@
 package com.saltside.bird.util;
 
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +29,12 @@ public class ResponseUtil {
 		ErrorResponse error = new ErrorResponse().message(e.getMessage());
 		ApiResponseMessage res = new ApiResponseMessage().error(error);
 		return Response.serverError().entity(res).build();
+	}
+
+	public static Response getSuccessResponse(Status status, Object result) {
+		ApiResponseMessage res = new ApiResponseMessage();
+		res.data(result);
+		return Response.status(status).entity(res).build();
 	}
 
 	public static Response getSuccessResponse(Object result) {

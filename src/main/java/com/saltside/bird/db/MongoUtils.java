@@ -16,12 +16,26 @@ class MongoUtils {
 	 * mongo client
 	 */
 	private static MongoClient mongoclient;
+	static {
+		initilize();
+	}
+
+	/**
+	 * 
+	 */
+	private static void initilize() {
+		String mongoUser = "admin";
+		String mongoPass = "admin";
+
+		List<MongoCredential> credentials = new ArrayList<MongoCredential>(1);
+		credentials.add(MongoCredential.createCredential(mongoUser, "admin", mongoPass.toCharArray()));
+		mongoclient = new MongoClient(new ServerAddress("127.0.0.1", 27017));
+	}
 
 	/**
 	 * not exposed constructor
 	 */
 	private MongoUtils() {
-
 	}
 
 	/**
@@ -30,15 +44,6 @@ class MongoUtils {
 	 * @return
 	 */
 	public static MongoClient getInstance() {
-
-		if (mongoclient == null) {
-			String mongoUser = "admin";
-			String mongoPass = "admin";
-
-			List<MongoCredential> credentials = new ArrayList<MongoCredential>(1);
-			credentials.add(MongoCredential.createCredential(mongoUser, "admin", mongoPass.toCharArray()));
-			mongoclient = new MongoClient(new ServerAddress("127.0.0.1", 27017));
-		}
 		return mongoclient;
 	}
 

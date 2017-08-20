@@ -78,6 +78,7 @@ public class DBStore {
 		System.out.println(getInstance().delete("59980f674befdf0a6666d655"));
 		System.out.println(getInstance().get(null, 10, true));
 		System.out.println(getInstance().get("59980f674befdf0a6666d655"));
+		System.out.println(getInstance().getByNameFamily("test", "testng"));
 	}
 
 	/**
@@ -111,5 +112,21 @@ public class DBStore {
 		Bson filter = Filters.eq("_id", getAsObjectId(id));
 		Document doc = col.findOneAndDelete(filter);
 		return doc != null;
+	}
+
+	/**
+	 * @param name
+	 * @param family
+	 * @return
+	 */
+	public Bird getByNameFamily(String name, String family) {
+		Bson nameFilter = Filters.eq("name", name);
+		Bson familyFilter = Filters.eq("family", family);
+
+		MongoCursor<Document> doc = col.find(Filters.and(nameFilter, familyFilter)).iterator();
+		if (doc.hasNext()) {
+			return getAsBird(doc.next());
+		}
+		return null;
 	}
 }

@@ -13,6 +13,7 @@ import com.saltside.bird.exception.BirdException;
 import com.saltside.bird.exception.BirdException.ErrorCode;
 import com.saltside.bird.exception.BirdException.ErrorMessage;
 import com.saltside.bird.model.Bird;
+import com.saltside.bird.util.DateTimeUtil;
 import com.saltside.bird.util.ResponseUtil;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2017-08-19T05:47:47.983Z")
@@ -70,9 +71,13 @@ public class BirdsApiServiceImpl extends BirdsApiService {
 			if (!body.isValid()) {
 				throw new BirdException(Status.BAD_REQUEST, ErrorCode.FIELD_NOT_FOUND, ErrorMessage.FieldNotFound);
 			}
-			body.setAdded((new Date()).toString());
+			Bird existBird = DBStore.getInstance().getByNameFamily(body.getName(), body.getFamily());
+			if (existBird != null) {
+				throw new BirdException(Status.BAD_REQUEST, ErrorCode.DUPLICATE, ErrorMessage.BirdExistAlready);
+			}
+			body.setAdded(DateTimeUtil.formatDate(new Date()));
 			Bird res = DBStore.getInstance().add(body);
-			return ResponseUtil.getSuccessResponse(res);
+			return ResponseUtil.getSuccessResponse(Status.CREATED, res);
 		} catch (BirdException e) {
 			return ResponseUtil.getBirdExceptionResponse(e);
 		} catch (Exception e) {

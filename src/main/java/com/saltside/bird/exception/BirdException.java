@@ -12,12 +12,12 @@ public class BirdException extends Exception {
 	private String rawMessage;
 
 	public static enum ErrorCode {
-		FIELD_NOT_FOUND, NOT_FOUND
+		FIELD_NOT_FOUND, NOT_FOUND, DUPLICATE
 
 	}
 
 	public static enum ErrorMessage {
-		FieldNotFound, BirdNotFound
+		FieldNotFound, BirdNotFound, BirdExistAlready
 	}
 
 	public BirdException(Status status, ErrorCode code, ErrorMessage message) {

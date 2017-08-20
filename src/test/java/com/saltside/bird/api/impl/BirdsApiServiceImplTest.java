@@ -22,47 +22,77 @@ public class BirdsApiServiceImplTest {
 
 	@Test
 	public void testPostBird() {
-		Bird bird = testCreate();
-		birdIdList.add(bird.getId());
+
+		Bird body = new Bird().name("testPostBird").family("testBird").addContinentsItem("testng");
+		Response res = testCreate(body);
+		Bird bird = getAsBird(res);
+		addToCleanupList(bird);
+
+		Assert.assertEquals(Status.CREATED.getStatusCode(), res.getStatus());
 	}
 
-	private Bird testCreate() {
-		Bird body = new Bird().name("test").family("testng").addContinentsItem("india");
-		Response res = delegate.postBirds(body, null);
-		Assert.assertEquals(Status.OK.getStatusCode(), res.getStatus());
+	@Test
+	public void testPostDuplicateBird() {
+
+		Bird body = new Bird().name("testPostDuplicateBird").family("testBird").addContinentsItem("testng");
+		Response res = testCreate(body);
+		Bird bird = getAsBird(res);
+		addToCleanupList(bird);
+
+		Assert.assertEquals(Status.CREATED.getStatusCode(), res.getStatus());
+
+		res = testCreate(body);
+		Assert.assertEquals(Status.BAD_REQUEST.getStatusCode(), res.getStatus());
+	}
+
+	private Bird getAsBird(Response res) {
 		ApiResponseMessage apiRes = (ApiResponseMessage) res.getEntity();
 		Bird bird = (Bird) apiRes.getData();
 		Assert.assertNotNull(bird.getId());
 		return bird;
 	}
 
+	/**
+	 * @param bird
+	 */
+	private void addToCleanupList(Bird bird) {
+		birdIdList.add(bird.getId());
+	}
+
 	@Test
 	public void testPostBirdWithoutName() {
 		Bird body = new Bird().family("testng").addContinentsItem("india");
-		testCreate(body);
+		Response res = testCreate(body);
+		Assert.assertEquals(Status.BAD_REQUEST.getStatusCode(), res.getStatus());
 	}
 
 	@Test
 	public void testPostBirdWithoutFamily() {
 		Bird body = new Bird().name("name").addContinentsItem("india");
-		testCreate(body);
+		Response res = testCreate(body);
+		Assert.assertEquals(Status.BAD_REQUEST.getStatusCode(), res.getStatus());
 	}
 
 	@Test
 	public void testPostBirdWithoutContinent() {
 		Bird body = new Bird().name("name").family("testng");
-		testCreate(body);
+		Response res = testCreate(body);
+		Assert.assertEquals(Status.BAD_REQUEST.getStatusCode(), res.getStatus());
 	}
 
-	private void testCreate(Bird body) {
-		Response res = delegate.postBirds(body, null);
-		Assert.assertEquals(Status.BAD_REQUEST.getStatusCode(), res.getStatus());
+	private Response testCreate(Bird body) {
+		return delegate.postBirds(body, null);
 	}
 
 	@Test
 	public void testDeleteExistingBird() {
-		Bird bird = testCreate();
-		Response delRes = delegate.deleteBirdsId(bird.getId(), null);
+		Bird body = new Bird().name("testDeleteExistingBird").family("testBird").addContinentsItem("testng");
+		Response res = testCreate(body);
+		Bird createdBird = getAsBird(res);
+		addToCleanupList(createdBird);
+
+		Assert.assertEquals(Status.CREATED.getStatusCode(), res.getStatus());
+		Response delRes = delegate.deleteBirdsId(createdBird.getId(), null);
 		Assert.assertEquals(Status.OK.getStatusCode(), delRes.getStatus());
 	}
 
@@ -74,15 +104,35 @@ public class BirdsApiServiceImplTest {
 
 	@Test
 	public void testGetBirds() {
-		Response res = delegate.getBirds(new BigDecimal("10"), null, null);
+		Bird bird1 = new Bird().name("testGetBirds1").family("testBird").addContinentsItem("testng").visible(true);
+		Response res = testCreate(bird1);
+		addToCleanupList(getAsBird(res));
+		Assert.assertEquals(Status.CREATED.getStatusCode(), res.getStatus());
+
+		Bird bird2 = new Bird().name("testGetBirds2").family("testBird").addContinentsItem("testng");
+		res = testCreate(bird2);
+		addToCleanupList(getAsBird(res));
+		Assert.assertEquals(Status.CREATED.getStatusCode(), res.getStatus());
+
+		res = delegate.getBirds(new BigDecimal("10"), null, null);
 		Assert.assertEquals(Status.OK.getStatusCode(), res.getStatus());
+		ApiResponseMessage apiRes = (ApiResponseMessage) res.getEntity();
+		List<Bird> birdList = (List<Bird>) apiRes.getData();
+		Assert.assertTrue(birdList.size() > 0);
+		for (Bird bird : birdList) {
+			Assert.assertEquals(true, bird.getVisible().booleanValue());
+		}
 	}
 
 	@Test
 	public void testGetBirdById() {
-		Bird bird = testCreate();
-		birdIdList.add(bird.getId());
-		Response res = delegate.getBirdsId(bird.getId(), null);
+		Bird bird = new Bird().name("testGetBirdById").family("testBird").addContinentsItem("testng").visible(true);
+		Response res = testCreate(bird);
+		addToCleanupList(getAsBird(res));
+
+		Assert.assertEquals(Status.CREATED.getStatusCode(), res.getStatus());
+
+		res = delegate.getBirdsId(bird.getId(), null);
 		Assert.assertEquals(Status.OK.getStatusCode(), res.getStatus());
 	}
 
