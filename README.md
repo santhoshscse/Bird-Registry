@@ -19,3 +19,4 @@ Running testcases
   - testing is skipped in this environment
  4. Run command 'java -jar target/Bird-Registry-0.0.1-SNAPSHOT.jar server config.yml' to run the application
   - config.yml contains information about server port
+  - Application will run at http://localhost:9090
