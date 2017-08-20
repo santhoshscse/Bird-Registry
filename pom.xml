@@ -39,6 +39,33 @@
 		</dependency>
 	</dependencies>
 
+	<profiles>
+		<profile>
+			<id>test</id>
+			<activation>
+				<property>
+					<name>target.env</name>
+					<value>test</value>
+				</property>
+			</activation>
+			<properties>
+				<resource.dir>test</resource.dir>
+			</properties>
+		</profile>
+		<profile>
+			<id>main</id>
+			<activation>
+				<property>
+					<name>target.env</name>
+					<value>main</value>
+				</property>
+			</activation>
+			<properties>
+				<resource.dir>main</resource.dir>
+			</properties>
+		</profile>
+
+	</profiles>
 	<build>
 		<plugins>
 			<plugin>
@@ -81,7 +108,7 @@
 		<sourceDirectory>src</sourceDirectory>
 		<resources>
 			<resource>
-				<directory>src</directory>
+				<directory>src/${resource.dir}/resources</directory>
 				<excludes>
 					<exclude>**/*.java</exclude>
 				</excludes>

@@ -10,6 +10,7 @@ import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.saltside.bird.util.BirdProperties;
 
 class MongoUtils {
 	/**
@@ -29,7 +30,7 @@ class MongoUtils {
 
 		List<MongoCredential> credentials = new ArrayList<MongoCredential>(1);
 		credentials.add(MongoCredential.createCredential(mongoUser, "admin", mongoPass.toCharArray()));
-		mongoclient = new MongoClient(new ServerAddress("127.0.0.1", 27017));
+		mongoclient = new MongoClient(new ServerAddress(BirdProperties.getInstance().getMongoServer(), 27017));
 	}
 
 	/**
@@ -56,7 +57,7 @@ class MongoUtils {
 	public static MongoCollection<Document> getCollectionByName(String collectionName) {
 
 		MongoClient client = MongoUtils.getInstance();
-		MongoDatabase db = client.getDatabase("bird-registry");
+		MongoDatabase db = client.getDatabase(BirdProperties.getInstance().getMongoDB());
 		MongoCollection<Document> col = db.getCollection(collectionName);
 
 		return col;
