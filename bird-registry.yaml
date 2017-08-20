@@ -1,0 +1,188 @@
+swagger: '2.0'
+info:
+  version: ''
+  title: Bird-Registry
+  description: Bird registry
+host: 'localhost:3000'
+basePath: /birds
+schemes:
+  - http
+paths:
+  '/birds/{id}':
+    parameters:
+      - name: id
+        in: path
+        required: true
+        type: string
+    delete:
+      operationId: DELETE_birds-id
+      summary: Delete bird by id
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/success-response'
+        '404':
+          description: ''
+          schema:
+            $ref: '#/definitions/error-response'
+    get:
+      operationId: GET_birds-id
+      summary: Get bird by id
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/bird-response'
+        '404':
+          description: ''
+          schema:
+            $ref: '#/definitions/error-response'
+  /birds:
+    get:
+      operationId: GET_birds
+      summary: List all birds
+      produces:
+        - application/json
+      parameters:
+        - name: limit
+          in: query
+          description: no.of records to return
+          type: number
+          default: 20
+        - name: offset
+          in: query
+          type: string
+      responses:
+        '200':
+          description: ''
+          schema:
+            title: 'GET /birds [request]'
+            description: List all visible birds in the registry
+            type: object
+            additionalProperties: false
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/bird-response'
+              link:
+                type: object
+                properties:
+                  nextOffset:
+                    type: string
+    post:
+      operationId: POST_birds
+      summary: Add bird
+      description: Add a new bird to the library
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/bird-request'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/bird-response'
+        '400':
+          description: ''
+          schema:
+            $ref: '#/definitions/error-response'
+definitions:
+  bird-request:
+    title: 'POST /birds [request]'
+    description: Add a new bird to the library
+    type: object
+    additionalProperties: false
+    properties:
+      name:
+        type: string
+        description: English bird name
+      family:
+        type: string
+        description: Latin bird family name
+      continents:
+        type: array
+        description: Continents the bird exist on
+        minItems: 1
+        uniqueItems: true
+        items:
+          type: string
+      added:
+        type: string
+        description: Date the bird was added to the registry. Format YYYY-MM-DD
+      visible:
+        type: boolean
+        description: Determines if the bird should be visible in lists
+        default: false
+    required:
+      - name
+      - family
+      - continents
+  bird-response:
+    title: 'POST /birds [response]'
+    description: Bird properties
+    type: object
+    required:
+      - id
+      - name
+      - family
+      - continents
+      - added
+      - visible
+    additionalProperties: false
+    properties:
+      id:
+        type: string
+        description: Object id from the database
+      name:
+        type: string
+        description: English bird name
+      family:
+        type: string
+        description: Latin bird family name
+      continents:
+        type: array
+        description: Continents the bird exist on
+        minItems: 1
+        items:
+          type: string
+        uniqueItems: true
+      added:
+        type: string
+        description: Date the bird was added to the registry. Format YYYY-MM-DD
+      visible:
+        type: boolean
+        description: Determines if the bird should be visible in lists
+  error-response:
+    title: Error-Response
+    type: object
+    properties:
+      code:
+        type: string
+        description: custom error code
+      message:
+        type: string
+        description: error message
+      source:
+        type: object
+        properties:
+          pointer:
+            type: string
+          parameter:
+            type: string
+  success-response:
+    title: Success-Response
+    type: object
+    properties:
+      message:
+        type: string
