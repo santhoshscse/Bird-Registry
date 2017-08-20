@@ -21,15 +21,7 @@ class MongoUtils {
 		initilize();
 	}
 
-	/**
-	 * 
-	 */
 	private static void initilize() {
-		String mongoUser = "admin";
-		String mongoPass = "admin";
-
-		List<MongoCredential> credentials = new ArrayList<MongoCredential>(1);
-		credentials.add(MongoCredential.createCredential(mongoUser, "admin", mongoPass.toCharArray()));
 		mongoclient = new MongoClient(new ServerAddress(BirdProperties.getInstance().getMongoServer(), 27017));
 	}
 
