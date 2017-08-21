@@ -1,4 +1,5 @@
 # Bird-Registry
+Implemented as per the specification in https://gist.github.com/sebdah/265f4255cb302c80abd4.
 
 Prerequisites
 =============
